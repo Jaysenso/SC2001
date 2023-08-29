@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#define SIZE 8
 void mergeSort(int* array, int firstIndex, int lastIndex);
+void merge(int *array, int firstIndex, int midPoint, int lastIndex);
 void printArray(int *array);
 
 
 void main(){
 
-    int arr[] = {7,5,6,10,9,1};
+    int arr[] = {90,25,10,71,94,22,59,74};
     int i;
-    printf("%d",(3/2));
 
-    //mergeSort(arr,arraySize);
+    printArray(arr);
+    mergeSort(arr,0,SIZE-1);
+    printArray(arr);
+
+    
     system("pause");
     
 }
@@ -37,15 +41,57 @@ void mergeSort(int* array, int firstIndex, int lastIndex){
     //merge sort on (mid+1, rear)
     mergeSort(array, midPoint + 1, lastIndex);
 
+    merge(array, firstIndex, midPoint, lastIndex);
+}
+/*
+    Merge algorithm:
+        1. left subarray runs from n to 'midpoint' with a as running index;
+        2. right subarray runs from midpoint + 1 to m with b as running index
+        3. slot[a] is the head element in left subarray, slot[b] is the head element in right subarray
+        4. d
+*/
+void merge(int *array, int firstIndex, int midPoint, int lastIndex){
 
-
-
+    int temp;
+    int a = firstIndex;
+    int b = midPoint + 1;
+    int i;
     
+    while(a <= midPoint && b <= lastIndex){
+        //case 1 : where slot[a]>slot[b] we need to perform right-shift 
+        if(array[a] > array[b]){ 
+            temp = array[b];
+            //right-shift
+            for(i = ++midPoint; i > a; i--){
+                array[i] = array[i-1];
+            }
+            //insert slot[b] behind of slot[a]
+            array[a++] = temp;
+            //increment b pointer/index
+            b++;
+        }
+        //case 3: where slot[a] == slot[b] we will perform right-shift and slot slot[b] right beside slot[a]
+        else if(array[a] == array[b]){
+            temp = array[b];
+            //increment a to make space for slot[b]
+            a++;
+            for(i = ++midPoint; i > a; i--){
+                array[i] = array[i-1];
+            }
+            array[a++] = temp;
+            //increment b pointer/index
+            b++;
+        }
+        //case 2: where slot[a] < slot[b] trivial case nothing much to do 
+        else if(array[a] < array[b]){
+            a++;
+        }
+    }
 
 }
 
 void printArray(int *array){
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < SIZE; i++){
         printf("%d ",array[i]);
     }
     printf("\n");
