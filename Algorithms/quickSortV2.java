@@ -1,10 +1,10 @@
 
 public class quickSortV2{
-    static int SIZE = 20;
     public static void main(String[] args){
-
-        int array[] = new int[]{10,5,8,12,7,6,15,9,16}; 
-        quickSort(array, 0, array.length -1);
+        //int array[] = new int[]{10,15,8};
+        int array[] = new int[]{10,5,8,12,7,6,15,9,16};
+        //partition(array, 0, array.length - 1);
+        quickSort(array, 0, array.length - 1); 
         printArray(array);
 
     }
@@ -21,31 +21,37 @@ public class quickSortV2{
      *  7. ending the partiton algo
      */
     public static int partition(int array[], int low, int high){
-        //we will store this seperately since we need to swap back after the partition\
-        System.out.printf("%d %d\n",high, low);
-        printArray(array);
+
         int midPoint = (high + low)/2;
+        int pivot = array[midPoint]; //store the pivot value as "pivot"
         int last_small = low;
-        int pivot = array[midPoint];
-        //bring pivot to index 0
-        swap(array,0, midPoint);
-        //we starting from array[0 + 1] where array[0] is our pivot
-        for(int i = 1; i < array.length - 2 ; i++){
-            if(array[i] < pivot)
-                swap(array, ++last_small, i);
+        //swap the positions of pivot/midpoint and 1st element in the array
+        swap(array, low, midPoint);
+        printArray(array);
+        //traverse the array and perform key comparisons (starting from index = 1 since index  = 0 is our pivot)
+        for(int i = low + 1; i <= high; i++){
+            //compare the current element with pivot
+            if(array[i] < pivot){ //if current element is smaller than pivot-> we increment last_small first then swap position of array[i] and last_small
+                ++last_small;
+                swap(array, last_small, i);
+            }
+            //else if current element is greater than pivot -> we only increment i(continue traversing down)'
         }
-        swap(array, 0, last_small);
+        //once we complete the partition, we then swap the positions of last_small and pivot(array[0])
+        swap(array, low, last_small);
+        //now we should have a partition-ed array where everything on the left of pivot is smaller than itself and everything on the right
+        //is larger or equal than itself
+        System.out.println(last_small);
         return last_small;
     }
 
 
     public static void quickSort(int array[], int low, int high){
-        if(low >= high)
-            return;
-
-        int pivot = partition(array, low, high);
-        quickSort(array, low , pivot - 1);
-        quickSort(array, pivot + 1, high);
+        if(low < high){
+            int pivot = partition(array, low, high);
+            quickSort(array, low , pivot - 1);
+            quickSort(array, pivot + 1, high);
+        }
     }
 
 
