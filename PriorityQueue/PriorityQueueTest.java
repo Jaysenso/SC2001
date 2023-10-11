@@ -1,7 +1,6 @@
 
 
-
-
+import java.util.*;
 //Dijkstra Algorithm -> Local generality
 //Algorithm Explanation
 /*
@@ -13,22 +12,22 @@
  * 3. call "extractCheapest" to extract the next cheapest adjacent neighbour node (delete the node at that index)
  * 4. check if dist(source -> nextNode) in distArray < dist(source -> currentNode) + dist(currentNode -> nextNode)
  * 5. we update distance(source -> nextNode) = dist(source -> currentNode) + dist(currentNode -> nextNode)
- * 6. enqueue nextNode with distance = newly updateddistance(source -> nextNode)
+ * 6. enqueue nextNode with distance = newly updatedDistance(source -> nextNode)
  * rinse and repeat 2 to 6 till the queue is empty
  */
 
 public class PriorityQueueTest{
     public static void main (String[] args){
 
-        //instantiate adjMatrix 
+        //instantiate variables & various data structures
         int numOfVertices = 5;
         int inf = Integer.MAX_VALUE;
-        int sourceNode = 1;
+        int sourceNode = 0;
 
-        PriorityQueue queue = new PriorityQueue();
-        int[][] adjMatrix = new int[numOfVertices][numOfVertices];
-        int[] distArray = new int[numOfVertices];
-        int[] parent = new int[numOfVertices];
+        PriorityQueue queue = new PriorityQueue(); // array-based priority queue to find shortest distance
+        int[][] adjMatrix = new int[numOfVertices][numOfVertices]; // 2D adjMatrix representation of the graph
+        int[] distArray = new int[numOfVertices]; // stores the distance to the source Node
+        int[] parent = new int[numOfVertices];//stores the parent node
 
         //initialize weights between all vertices to INF
         for(int i = 0; i < numOfVertices; i++){
@@ -42,46 +41,65 @@ public class PriorityQueueTest{
         //initialize distArray & parent Array
         for(int i = 0; i < numOfVertices; i++){
             distArray[i] = inf; 
-            parent[i] = i + 1;
+            parent[i] = i;
         }
+        //Tutorial 6 graph 
+        // adjMatrix[0][1] = 4;
+        // adjMatrix[0][2] = 2;
+        // adjMatrix[0][3] = 6;
+        // adjMatrix[0][4] = 8;
+        // adjMatrix[1][3] = 4;
+        // adjMatrix[1][4] = 3;
+        // adjMatrix[2][3] = 1;
+        // adjMatrix[3][1] = 1;
+        // adjMatrix[3][4] = 3;
 
-        //add the edges & weights
-        adjMatrix[0][1] = 4;
-        adjMatrix[0][2] = 2;
-        adjMatrix[0][3] = 6;
-        adjMatrix[0][4] = 8;
-        adjMatrix[1][3] = 4;
-        adjMatrix[1][4] = 3;
-        adjMatrix[2][3] = 1;
-        adjMatrix[3][1] = 1;
-        adjMatrix[3][4] = 3;
+        // second example
+        adjMatrix[0][1] = 2;
+        adjMatrix[0][3] = 1;
+        adjMatrix[1][4] = 5;
+        adjMatrix[1][2] = 4;
+        adjMatrix[2][4] = 1;
+        adjMatrix[3][2] = 3;
+
         
         printAdjMatrix(adjMatrix, numOfVertices);
 
-        distArray[sourceNode - 1] = 0;
+        //here onwards is dijkstra's algorithm implementation
+        distArray[sourceNode] = 0;
         queue.enqueue(sourceNode, 0);
 
-        int weight;
+        int cost, parentNode;
         Edge cheapestEdge = null;
-        int k = 0;
+
         //we keep processing the edges till the queue is empty(visited all the edges/vertices)
-        while(k < 5){
-            cheapestEdge = queue.extractCheapest(); //we extract the cheapest and enqueue its adjacent neighbours
-            for(int i = 0; i < numOfVertices; i++){
-                weight = adjMatrix[cheapestEdge.getNode() - 1][i];
-                //we check if there exists a weights
-                if(weight != inf && weight != 0 && distArray[i] > ){
-                    queue.enqueue(i, weight);
+        while(!queue.isEmpty()){
+            cheapestEdge = queue.extractCheapest(); //we extract the cheapest
+            if(cheapestEdge == null)
+                break;
+
+            //cheapestEdge.printNodeInfo(); <- to check what node has been popped off
+
+            //we look for all its neighbours and cache the edge 
+            for(int i = 0; i < numOfVertices; i++){ 
+                cost = adjMatrix[cheapestEdge.getNode()][i];
+                parentNode = cheapestEdge.getNode(); 
+
+                //we look for a shortest path to its neighbour nodes, if there exists a shorter path, update distArray then enqueue it 
+                if(cost != inf && cost != 0 && distArray[i] > adjMatrix[parentNode][i] + distArray[parentNode]){
+                    distArray[i] = adjMatrix[parentNode][i] + distArray[parentNode]; // "i" represents neighbouring vertices
+                    parent[i] = parentNode;
+                    queue.enqueue(i, cost);
                 }
             }
-            queue.printQueue();
-            System.out.println();
-            k++;
+            //queue.printQueue(); <- to check queue at every iteration 
+            //System.out.println();
+            //printDistArray(distArray, numOfVertices);
         }
+            printDistArray(distArray, numOfVertices);
+            printPath(parent, 0, 4, numOfVertices);
 
     }
-
-
 
     public static void printAdjMatrix(int[][] adjacencyMatrix, int numOfVertices){
 
@@ -105,6 +123,44 @@ public class PriorityQueueTest{
             System.out.println();
         }
         System.out.println();
+    }
+
+
+    public static void printDistArray(int [] distArray, int numOfVertices){
+            System.out.printf("\n----------Distance Array----------\n");
+
+            System.out.printf("Node\t|\t");
+            for(int i = 0; i < numOfVertices; i++){
+                System.out.printf("%d\t",i + 1);
+            }
+
+            System.out.println();
+
+            System.out.printf("Distance|\t");
+            for(int i = 0; i < numOfVertices; i++){
+                System.out.printf("%d\t",distArray[i]);
+            }
+            System.out.println();
+    }
+
+    public static void printPath(int[] parent, int source, int destination, int numOfVertices){
+
+        ArrayList<Integer> path = new ArrayList<Integer>();
+        int node = destination;
+        //we backtrack the parentArray and add the parentNode to an ArrayList "path" for printing
+        while(parent[node] != source){
+            path.add(parent[node]);
+            node = parent[node];
+        }
+        //since we know destination and source, we just print out all the vertices in between those 2 vertices
+        System.out.printf("%d -> " , source + 1);
+
+        for(int j = path.size() - 1; j >= 0; j--){
+            System.out.printf("%d", (path.get(j) + 1));
+            if(j > 0)
+                System.out.printf(" -> ");
+        }
+        System.out.printf(" -> %d" , destination + 1);
     }
     
 }
