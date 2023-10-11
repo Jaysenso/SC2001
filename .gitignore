@@ -53,3 +53,4 @@ dkms.conf
 *.class
 Algorithms/tempCodeRunnerFile.java
 PriorityQueue/tempCodeRunnerFile.java
+DijkstraAlgorithm/tempCodeRunnerFile.java
