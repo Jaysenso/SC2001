@@ -23,8 +23,8 @@ public class Edge{
 
 
     public void printNodeInfo(){
-        System.out.println("Current Node :" + node + ", Shortest Distance from source : "
-        + distance + "\n");
+        System.out.println("\nCurrent Node : " + (node + 1) + ", Shortest Distance from source : "
+        + distance);
 
     }
 
