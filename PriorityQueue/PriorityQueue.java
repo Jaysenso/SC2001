@@ -21,6 +21,9 @@ public class PriorityQueue {
     }
 
     public Edge extractCheapest(){
+        if(queue.isEmpty()){
+
+        }
         Edge cheapestEdge = null;
         int cheapestIndex = -1; //act as a flag to signal that we found the cheapestEdge and for deletion/dequeue
         int distance = Integer.MAX_VALUE;
@@ -55,7 +58,8 @@ public class PriorityQueue {
             return;
         }
         Edge edge = null;
-
+        
+        System.out.println();
         System.out.printf("To Node:\t|\t");
         for(int i = 0; i < queue.size(); i++){
             edge = queue.get(i);
