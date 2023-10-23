@@ -17,7 +17,7 @@ public class quickSortV2{
      *     down the array for key comparisons respectively
      *  4. if array[i] is less than pivot, we will swap(++last_small, i)
      *  5. if array[i] is greater than pivot, we will do nothing and just increment i (for loop)
-     *  6. once i reaches the end of the array, we will swap pivot back to the mid point 
+     *  6. once i reaches the end of the array, we will increment last_small by 1 and swap (pivot location (first index) and last_small index)
      *  7. ending the partiton algo
      */
     public static int partition(int array[], int low, int high){
