@@ -10,15 +10,15 @@ public class quickSortV2{
     }
     /*
      * Algorithm:
-     *  1. we select midpoint as our pivot (1st index + last index)/2
+     *  1. we select midpoint as our pivot (firstIndex + lastIndex)/2
      *  2. swap(pivot，array[0]) <- we move our pivot to the 1st element of array
-     *  3. we have indices "last_small" and "i" tracking the location of my border
-     *     between the elements < pivot & elements >= pivot and i" will be traversing
-     *     down the array for key comparisons respectively
+     *  3. "last_small" marks the final location of my pivot whereas "i" scan starting from last_small + 1 to the last index
      *  4. if array[i] is less than pivot, we will swap(++last_small, i)
      *  5. if array[i] is greater than pivot, we will do nothing and just increment i (for loop)
-     *  6. once i reaches the end of the array, we will increment last_small by 1 and swap (pivot location (first index) and last_small index)
-     *  7. ending the partiton algo
+     *  6. once "i" reached the end of the array, we will increment last_small by 1 and swap (elements in pivot location (first index) and last_small index)
+     *  7. perform quickSort recursively for (array[firstIndex] - array[pivotIndex]) and (array[pivotIndex + 1] - array[lastIndex]) [divide and conquer]
+     *  8. notice that the pivot we chose will determine if we break up the array optimally or not (a bad pivot will leave us with a O(N^2) time complexity)
+     *  7. ending the partition algo
      */
     public static int partition(int array[], int low, int high){
 
