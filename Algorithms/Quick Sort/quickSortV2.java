@@ -24,7 +24,7 @@ public class quickSortV2{
 
         int midPoint = (high + low)/2;
         int pivot = array[midPoint]; //store the pivot value as "pivot"
-        int last_small = low;
+        int last_small = low; //marks the final location for pivot
         //swap the positions of pivot/midpoint and 1st element in the array
         swap(array, low, midPoint);
         printArray(array);
