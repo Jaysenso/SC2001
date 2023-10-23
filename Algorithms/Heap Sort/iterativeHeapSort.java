@@ -4,12 +4,13 @@ public class iterativeHeapSort {
 
         int[] array = new int[]{17,12,8,7,6,30,4};
         printArray(array);
-        heapSortAlgo(array, array.length);
+        heapSortAlgo(array);
         printArray(array);
 
     }
     //for this iterative HeapSort (heapify & commonly known fixHeap works the same way) 
-    public static void heapSortAlgo(int array[], int arraySize){
+    public static void heapSortAlgo(int array[]){
+        int arraySize = array.length;
         //help to construct the maxHeap tree starting from the last non-leaf nodes
         buildMaxHeap(array);
 
@@ -23,7 +24,7 @@ public class iterativeHeapSort {
             //repeat this process till we have a sorted array
         for(int i = arraySize - 1; i > 1; i--){
             swap(array, 0, i);
-            heapify(array, i, 0); //fixheap starting from rootNode with arraySize decreasing by 1 after every iteration
+            heapify(array, i, 0); //fix-heap starting from rootNode with arraySize decreasing by 1 after every iteration
         }
 
     }
