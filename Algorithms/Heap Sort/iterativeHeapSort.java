@@ -10,10 +10,9 @@ public class iterativeHeapSort {
     }
     //for this iterative HeapSort (heapify & commonly known fixHeap works the same way) 
     public static void heapSortAlgo(int array[], int arraySize){
-        //this loop will help to construct the maxHeap tree starting from the last non-leaf nodes
-        for(int i = arraySize/2 - 1; i >= 0; i--){
-            heapify(array, arraySize, i);
-        }
+        //help to construct the maxHeap tree starting from the last non-leaf nodes
+        buildMaxHeap(array);
+
         //At this stage, we would have a MaxHeap tree, then we will partition the array/tree into unsorted and sorted
             //In maxHeap tree,the largest element == rootNode element, hence we need to shift it to the back of the array (for ascending sort)
             //We can achieve this by swapping the last node and our root node(basically first element and last element in the array)
@@ -27,6 +26,13 @@ public class iterativeHeapSort {
             heapify(array, i, 0); //fixheap starting from rootNode with arraySize decreasing by 1 after every iteration
         }
 
+    }
+    public static void buildMaxHeap(int[] array){
+        int arraySize = array.length;
+        //this loop will help to construct the maxHeap tree starting from the last non-leaf nodes
+        for(int i = arraySize/2 - 1; i >= 0; i--){
+            heapify(array, arraySize, i);
+        }
     }
     public static void heapify(int array[], int arraySize, int parentIndex){
         //initialize largest pointer to point at parentIndex, we will update it when we find a larger chilNode >= parentNode
