@@ -6,11 +6,13 @@ import java.util.*;
  *  -> 1D array "distArray" : dist[i] stores the distance to the sourceNode , "i" represents the node number 
  *  -> 2D array "adjMatrix" : adjMatrix[i][j] stores the weights of existing weights, where "i" represents the fromNode and "j" represents the toNode
  * 2. enqueue source node into queue and update dist[sourceNode] = 0
- * 3. call "extractCheapest" to extract the next cheapest adjacent neighbour node (delete the node at that index)
- * 4. check if dist(source -> nextNode) in distArray < dist(source -> currentNode) + dist(currentNode -> nextNode)
- * 5. we update distance(source -> nextNode) = dist(source -> currentNode) + dist(currentNode -> nextNode)
+ * 3. call "extractCheapest" to extract the next cheapest adjacent neighbour node (dequeue the cheapest edge) and check 4.
+ * 4. check if current dist(source -> nextNode) in distArray greater than dist(source -> currentNode) + dist(currentNode -> nextNode)
+ * 5. if yes, we update distance(source -> nextNode) = dist(source -> currentNode) + dist(currentNode -> nextNode) (shorter path has been found)
  * 6. enqueue nextNode with distance = newly updatedDistance(source -> nextNode)
- * rinse and repeat 2 to 6 till the queue is empty
+ * rinse and repeat 2 to 6 till the queue is empty (all edges have been visited / processed)
+ * 7. distArray reflects the final shortest path between sourceNode to any other nodes
+ * extra : in printPath(), arrayList "path" is used to trace the path between source node and destination node (user - defined)
 */
 
 public class DijkstraAlgorithm{
@@ -55,7 +57,7 @@ public class DijkstraAlgorithm{
     public static void dijkstra(int [][] adjMatrix, int source, int destination, int numOfVertices){
 
         int inf = Integer.MAX_VALUE;
-        PriorityQueue queue = new PriorityQueue(); // array-based priority queue to find shortest distance
+        PriorityQueue queue = new PriorityQueue(); // array-based priority queue to find the shortest distance
         int[] distArray = new int[numOfVertices]; // stores the distance to the source Node
         int[] parent = new int[numOfVertices];//stores the parent node
 
@@ -65,13 +67,14 @@ public class DijkstraAlgorithm{
             distArray[i] = inf;
             parent[i] = i;
         }
-        distArray[source] = 0;
+        //enqueue source node and update its distance to source Node(distance to itself is 0)
         queue.enqueue(source, 0);
+        distArray[source] = 0;
 
         int cost, parentNode;
         Edge cheapestEdge = null;
 
-        //we keep processing the edges till the queue is empty(visited all the edges/vertices)
+        //we keep processing the edges till the queue is empty(queue is empty == visited all the edges)
         while(!queue.isEmpty()){
             cheapestEdge = queue.extractCheapest(); //we extract the cheapest
             if(cheapestEdge == null)
@@ -79,7 +82,7 @@ public class DijkstraAlgorithm{
 
             //cheapestEdge.printNodeInfo(); <- to check what node has been popped off
 
-            //we look for all its neighbours and cache the edge 
+            //we look for all its neighbours and cache the respective edges
             for(int i = 0; i < numOfVertices; i++){ 
                 cost = adjMatrix[cheapestEdge.getNode()][i];
                 parentNode = cheapestEdge.getNode(); 
